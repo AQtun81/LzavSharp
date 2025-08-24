@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--<OutputType>Exe</OutputType>-->
+
+    <PackageId>AQtun.LZAV</PackageId>
+    <PackageProjectUrl>https://github.com/AQtun81/LzavSharp</PackageProjectUrl>
+    <Authors>AQtun</Authors>
+    <PackageTags>lzav compression</PackageTags>
+    <Version>4.23</Version>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/avaneev/lzav</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+    <IsLinux   Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'   == 'true'">true</IsLinux>
+    <IsMacOS   Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'     == 'true'">true</IsMacOS>
+
+    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsWindows)' == 'true' And ('$(Prefer32Bit)'   == 'true'  Or '$(PlatformTarget)' == 'x86')">win-x86</NativeRuntime>
+    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsWindows)' == 'true' And ('$(Prefer32Bit)'   == 'false' Or '$(PlatformTarget)' == 'x64')">win-x64</NativeRuntime>
+    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsWindows)' == 'true' And                                   '$(PlatformTarget)' == 'arm64'">win-arm64</NativeRuntime>
+    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsLinux)' == 'true'   And ('$(Prefer32Bit)'   == 'false' Or '$(PlatformTarget)' == 'x64')">linux-x64</NativeRuntime>
+    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsLinux)' == 'true'   And                                   '$(PlatformTarget)' == 'arm64'">linux-arm64</NativeRuntime>
+    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsMacOS)' == 'true'   And ('$(Prefer32Bit)'   == 'false' Or '$(PlatformTarget)' == 'x64')">osx-x64</NativeRuntime>
+    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsMacOS)' == 'true'   And                                   '$(PlatformTarget)' == 'arm64'">osx-arm64</NativeRuntime>
+
+    <NativeLibName Condition="'$(NativeRuntime)' == 'win-x86'">lzav.dll</NativeLibName>
+    <NativeLibName Condition="'$(NativeRuntime)' == 'win-x64'">lzav.dll</NativeLibName>
+    <NativeLibName Condition="'$(NativeRuntime)' == 'win-arm64'">lzav.dll</NativeLibName>
+    <NativeLibName Condition="'$(NativeRuntime)' == 'linux-x64'">lzav.so</NativeLibName>
+    <NativeLibName Condition="'$(NativeRuntime)' == 'linux-arm64'">lzav.so</NativeLibName>
+    <NativeLibName Condition="'$(NativeRuntime)' == 'osx-x64'">lzav.dylib</NativeLibName>
+    <NativeLibName Condition="'$(NativeRuntime)' == 'osx-arm64'">lzav.dylib</NativeLibName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="runtimes\**\*" Pack="true" PackagePath="runtimes\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Condition="'$(NativeRuntime)' != ''"
+          Include="runtimes\$(NativeRuntime)\native\$(NativeLibName)"
+          Link="%(Filename)%(Extension)">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="GenerateNativeLibConstant" BeforeTargets="CoreCompile">
+    <WriteLinesToFile
+            File="$(IntermediateOutputPath)Lzav.gen.cs"
+            Lines="namespace LzavSharp { public static partial class Lzav { private const string LZAV_DLL = &quot;$(NativeLibName)&quot;%3B; } }"
+            Overwrite="true"
+            WriteOnlyWhenDifferent="true" />
+
+    <ItemGroup>
+      <Compile Include="$(IntermediateOutputPath)Lzav.gen.cs" />
+    </ItemGroup>
+  </Target>
+
+</Project>

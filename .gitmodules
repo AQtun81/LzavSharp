@@ -1,0 +1,4 @@
+[submodule "lzav_src"]
+	path = lzav_src
+	url = https://github.com/avaneev/lzav
+	branch = main
