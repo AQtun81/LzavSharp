@@ -6,7 +6,7 @@ New-Item -Force -ItemType directory -Path src/runtimes/$target/native | Out-Null
 switch ($target)
 {
   "linux-arm"   { sudo apt-get install -y gcc-arm-linux-gnueabihf }
-  "linux-arm64" { sudo apt-get install -y gcc-aarch64-linux-gnu   }
+  "linux-arm64" {  }
   "linux-x64"   {  }
   "win-arm64"   {  }
   "win-x64"     {  }
