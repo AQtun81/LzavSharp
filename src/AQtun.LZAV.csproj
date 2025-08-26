@@ -16,7 +16,6 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -45,26 +44,35 @@
     <None Include="runtimes\**\*" Pack="true" PackagePath="runtimes\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Condition="'$(NativeRuntime)' != ''"
-          Include="runtimes\$(NativeRuntime)\native\$(NativeLibName)"
-          Link="%(Filename)%(Extension)">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
   <Target Name="GenerateNativeLibConstant" BeforeTargets="CoreCompile">
+      <PropertyGroup>
+          <NativeLibNameConstant>
+              <![CDATA[
+namespace AQtun.LZAV
+{
+    public static partial class Lzav
+    {
+        private const string LZAV_DLL = "$(NativeLibName)"%3b
+    }
+}
+       ]]>
+          </NativeLibNameConstant>
+      </PropertyGroup>
     <WriteLinesToFile
             File="$(IntermediateOutputPath)Lzav.gen.cs"
-            Lines="namespace AQtun.LZAV { public static partial class Lzav { private const string LZAV_DLL = &quot;$(NativeLibName)&quot;%3B; } }"
+            Lines="$(NativeLibNameConstant)"
             Overwrite="true"
             WriteOnlyWhenDifferent="true" />
 
     <ItemGroup>
-      <Compile Include="$(IntermediateOutputPath)Lzav.gen.cs" />
+      <Compile Include="$(IntermediateOutputPath)Lzav.gen.cs" Pack="true" PackagePath="contentFiles\any\any" />
     </ItemGroup>
   </Target>
 
+    <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">
+        <IsTrimmable>true</IsTrimmable>
+    </PropertyGroup>
+    
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Memory" Version="4.6.3" />
   </ItemGroup>
