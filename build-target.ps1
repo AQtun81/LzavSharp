@@ -18,11 +18,11 @@ switch ($target)
 # Build
 switch ($target)
 {
-  "linux-arm"   { arm-linux-gnueabihf-gcc           -shared -o src/runtimes/linux-arm/native/lzav.so    temp/lzav.c -O2 }
-  "linux-arm64" { aarch64-linux-gnu-gcc             -shared -o src/runtimes/linux-arm64/native/lzav.so  temp/lzav.c -O2 }
-  "linux-x64"   { x86_64-linux-gnu-gcc              -shared -o src/runtimes/linux-x64/native/lzav.so    temp/lzav.c -O2 }
-  "osx-arm64"   { clang -target arm64-apple-darwin  -shared -o src/runtimes/osx-arm64/native/lzav.dylib temp/lzav.c -O2 }
-  "osx-x64"     { clang -target x86_64-apple-darwin -shared -o src/runtimes/osx-x64/native/lzav.dylib   temp/lzav.c -O2 }
+  "linux-arm"   { arm-linux-gnueabihf-gcc           -shared -o src/runtimes/linux-arm/native/liblzav.so    temp/lzav.c -O2 }
+  "linux-arm64" { aarch64-linux-gnu-gcc             -shared -o src/runtimes/linux-arm64/native/liblzav.so  temp/lzav.c -O2 }
+  "linux-x64"   { x86_64-linux-gnu-gcc              -shared -o src/runtimes/linux-x64/native/liblzav.so    temp/lzav.c -O2 }
+  "osx-arm64"   { clang -target arm64-apple-darwin  -shared -o src/runtimes/osx-arm64/native/liblzav.dylib temp/lzav.c -O2 }
+  "osx-x64"     { clang -target x86_64-apple-darwin -shared -o src/runtimes/osx-x64/native/liblzav.dylib   temp/lzav.c -O2 }
   {$_ -like "win-*"} {
     $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
     $vsPath = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath

@@ -150,5 +150,5 @@ jobs:
       run: |
         cd src
         dotnet restore
-        dotnet pack -c Release -p:PackageVersion=${{ github.event.inputs.version }} --output nupkg
+        dotnet pack -c Release -p:PackageVersion=${{ github.event.inputs.version }} -p:BuildInParallel=false --output nupkg
         dotnet nuget push nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

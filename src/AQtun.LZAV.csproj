@@ -11,69 +11,26 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     
-    <TargetFrameworks>net7.0;netstandard2.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net7.0;net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
-    <IsLinux   Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'   == 'true'">true</IsLinux>
-    <IsMacOS   Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'     == 'true'">true</IsMacOS>
-
-    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsWindows)' == 'true' And ('$(Prefer32Bit)'   == 'true'  Or '$(PlatformTarget)' == 'x86')">win-x86</NativeRuntime>
-    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsWindows)' == 'true' And ('$(Prefer32Bit)'   == 'false' Or '$(PlatformTarget)' == 'x64')">win-x64</NativeRuntime>
-    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsWindows)' == 'true' And                                   '$(PlatformTarget)' == 'arm64'">win-arm64</NativeRuntime>
-    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsLinux)' == 'true'   And ('$(Prefer32Bit)'   == 'false' Or '$(PlatformTarget)' == 'x64')">linux-x64</NativeRuntime>
-    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsLinux)' == 'true'   And                                   '$(PlatformTarget)' == 'arm64'">linux-arm64</NativeRuntime>
-    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsMacOS)' == 'true'   And ('$(Prefer32Bit)'   == 'false' Or '$(PlatformTarget)' == 'x64')">osx-x64</NativeRuntime>
-    <NativeRuntime Condition=" '$(NativeRuntime)' == '' And '$(IsMacOS)' == 'true'   And                                   '$(PlatformTarget)' == 'arm64'">osx-arm64</NativeRuntime>
-
-    <NativeLibName Condition="'$(NativeRuntime)' == 'win-x86'">lzav.dll</NativeLibName>
-    <NativeLibName Condition="'$(NativeRuntime)' == 'win-x64'">lzav.dll</NativeLibName>
-    <NativeLibName Condition="'$(NativeRuntime)' == 'win-arm64'">lzav.dll</NativeLibName>
-    <NativeLibName Condition="'$(NativeRuntime)' == 'linux-x64'">lzav.so</NativeLibName>
-    <NativeLibName Condition="'$(NativeRuntime)' == 'linux-arm64'">lzav.so</NativeLibName>
-    <NativeLibName Condition="'$(NativeRuntime)' == 'osx-x64'">lzav.dylib</NativeLibName>
-    <NativeLibName Condition="'$(NativeRuntime)' == 'osx-arm64'">lzav.dylib</NativeLibName>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Include="runtimes\**\*" Pack="true" PackagePath="runtimes\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
-  <Target Name="GenerateNativeLibConstant" BeforeTargets="CoreCompile">
-      <PropertyGroup>
-          <NativeLibNameConstant>
-              <![CDATA[
-namespace AQtun.LZAV
-{
-    public static partial class Lzav
-    {
-        private const string LZAV_DLL = "$(NativeLibName)"%3b
-    }
-}
-       ]]>
-          </NativeLibNameConstant>
-      </PropertyGroup>
-    <WriteLinesToFile
-            File="$(IntermediateOutputPath)Lzav.gen.cs"
-            Lines="$(NativeLibNameConstant)"
-            Overwrite="true"
-            WriteOnlyWhenDifferent="true" />
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <Compile Include="$(IntermediateOutputPath)Lzav.gen.cs" Pack="true" PackagePath="contentFiles\any\any" />
-    </ItemGroup>
-  </Target>
-
-    <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">
-        <IsTrimmable>true</IsTrimmable>
-    </PropertyGroup>
-    
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Memory" Version="4.6.3" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework.StartsWith(`net4`))' And '$(TargetFramework)' != 'net48' ">
     <PackageReference Include="System.Memory" Version="4.6.3" />
   </ItemGroup>
 
