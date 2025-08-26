@@ -148,9 +148,6 @@ jobs:
     - name: Push to NuGet
       shell: pwsh
       run: |
-        Get-ChildItem -File -Recurse | ForEach-Object {
-          Write-Host $_.FullName.Replace((Get-Location).Path, '').TrimStart([System.IO.Path]::DirectorySeparatorChar)
-        }
         cd src
         dotnet restore
         dotnet pack -c Release -p:PackageVersion=${{ github.event.inputs.version }} --output nupkg

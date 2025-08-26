@@ -8,13 +8,22 @@ namespace AQtun.LZAV
         /* COMPRESS DEFAULT
          -------------------------------------------------------------------------------------------------*/
 
+        #if NET7_0_OR_GREATER
+        [LibraryImport(LZAV_DLL, EntryPoint = "lzav_compress_bound")]
+        public static partial int CompressBound(int sourceLength);
+        #else
         [DllImport(LZAV_DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "lzav_compress_bound")]
         public static extern int CompressBound(int sourceLength);
+        #endif
 
         /// <returns>length of compressed data in the destination buffer, negative value indicates a failure</returns>
+        #if NET7_0_OR_GREATER
+        [LibraryImport(LZAV_DLL, EntryPoint = "lzav_compress_default")]
+        public static partial int CompressDefault(IntPtr source, IntPtr destination, int sourceLength, int destinationLength);
+        #else
         [DllImport(LZAV_DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "lzav_compress_default")]
-        public static extern int CompressDefault(IntPtr source, IntPtr destination, int sourceLength,
-            int destinationLength);
+        public static extern int CompressDefault(IntPtr source, IntPtr destination, int sourceLength, int destinationLength);
+        #endif
 
         /// <returns>length of compressed data in the destination buffer, negative value indicates a failure</returns>
         public static unsafe int CompressDefault(ReadOnlySpan<byte> source, Span<byte> destination)
@@ -39,12 +48,22 @@ namespace AQtun.LZAV
         /* COMPRESS HIGH
          -------------------------------------------------------------------------------------------------*/
 
+        #if NET7_0_OR_GREATER
+        [LibraryImport(LZAV_DLL, EntryPoint = "lzav_compress_bound_hi")]
+        public static partial int CompressBoundHi(int sourceLength);
+        #else
         [DllImport(LZAV_DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "lzav_compress_bound_hi")]
         public static extern int CompressBoundHi(int sourceLength);
+        #endif
 
         /// <returns>length of compressed data in the destination buffer, negative value indicates a failure</returns>
+        #if NET7_0_OR_GREATER
+        [LibraryImport(LZAV_DLL, EntryPoint = "lzav_compress_hi")]
+        public static partial int CompressHi(IntPtr source, IntPtr destination, int sourceLength, int destinationLength);
+        #else
         [DllImport(LZAV_DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "lzav_compress_hi")]
         public static extern int CompressHi(IntPtr source, IntPtr destination, int sourceLength, int destinationLength);
+        #endif
 
         /// <returns>length of compressed data in the destination buffer, negative value indicates a failure</returns>
         public static unsafe int CompressHi(ReadOnlySpan<byte> source, Span<byte> destination)
@@ -69,8 +88,13 @@ namespace AQtun.LZAV
          -------------------------------------------------------------------------------------------------*/
 
         /// <returns>length of decompressed data in the destination buffer, negative value indicates a failure</returns>
+        #if NET7_0_OR_GREATER
+        [LibraryImport(LZAV_DLL, EntryPoint = "lzav_decompress")]
+        public static partial int Decompress(IntPtr source, IntPtr destination, int sourceLength, int destinationLength);
+        #else
         [DllImport(LZAV_DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "lzav_decompress")]
         public static extern int Decompress(IntPtr source, IntPtr destination, int sourceLength, int destinationLength);
+        #endif
 
         /// <returns>length of decompressed data in the destination buffer, negative value indicates a failure</returns>
         public static unsafe int Decompress(ReadOnlySpan<byte> source, Span<byte> destination)

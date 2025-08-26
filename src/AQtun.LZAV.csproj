@@ -5,16 +5,18 @@
     <PackageProjectUrl>https://github.com/AQtun81/LzavSharp</PackageProjectUrl>
     <Authors>AQtun</Authors>
     <PackageTags>lzav compression</PackageTags>
-    <Version>4.23</Version>
+    <Version>4.23.1</Version>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/avaneev/lzav</RepositoryUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>net7.0;netstandard2.1;netstandard2.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -62,5 +64,9 @@
       <Compile Include="$(IntermediateOutputPath)Lzav.gen.cs" />
     </ItemGroup>
   </Target>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Memory" Version="4.6.3" />
+  </ItemGroup>
 
 </Project>
