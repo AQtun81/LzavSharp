@@ -11,7 +11,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     
-    <TargetFrameworks>net7.0;net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>net7.0;net5.0;netstandard2.1;netstandard2.0;net462</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
