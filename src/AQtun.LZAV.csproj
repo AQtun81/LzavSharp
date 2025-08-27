@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>AQtun.LZAV</PackageId>
-    <PackageProjectUrl>https://github.com/AQtun81/LzavSharp</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/AQtun81/lzav</PackageProjectUrl>
     <Authors>AQtun</Authors>
     <PackageTags>lzav compression</PackageTags>
     <Version>4.23.1</Version>
@@ -10,6 +10,7 @@
     <RepositoryUrl>https://github.com/avaneev/lzav</RepositoryUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     
     <TargetFrameworks>net7.0;net5.0;netstandard2.1;netstandard2.0;net462</TargetFrameworks>
     <LangVersion>latest</LangVersion>
@@ -20,6 +21,7 @@
 
   <ItemGroup>
     <None Include="runtimes\**\*" Pack="true" PackagePath="runtimes\%(RecursiveDir)%(Filename)%(Extension)" />
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">
